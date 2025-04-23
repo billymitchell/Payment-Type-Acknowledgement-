@@ -5,20 +5,20 @@ const shopName = document.title || "your shop";
 const acknowledgmentHTML = `
 <div class="payment-type-acknowledgement" style="margin-bottom: 15px;">
     <b>Required Acknowledgement</b>
-    <div class="form-check credit-card-acknowledgement-wrapper">
+    <div class="form-check credit-card-acknowledgement-wrapper" style="display: none;">
         <input class="form-check-input credit-card-payment-acknowledgement" type="checkbox"
             name="credit-card-payment-acknowledgement" id="credit-card-payment-acknowledgement" />
         <label class="form-check-label" for="credit-card-payment-acknowledgement">I understand that this payment is
             being made to the EGroup, Inc. on behalf of ${shopName} and will be reflected as such on my credit card
             statement.</label>
     </div>
-    <div class="form-check custom-payment-acknowledgement-wrapper">
+    <div class="form-check custom-payment-acknowledgement-wrapper" style="display: none;">
         <input class="form-check-input custom-payment-acknowledgement" type="checkbox"
             name="custom-payment-acknowledgement" id="custom-payment-acknowledgement" />
         <label class="form-check-label" for="custom-payment-acknowledgement">I understand that payment for this purchase
             order must be made out and submitted to Centricity (or our parent Company, E Group, Inc.).</label>
     </div>
-    <div class="form-check ach-payment-acknowledgement-wrapper">
+    <div class="form-check ach-payment-acknowledgement-wrapper" style="display: none;">
         <input class="form-check-input ach-payment-acknowledgement" type="checkbox" name="ach-payment-acknowledgement"
             id="ach-payment-acknowledgement" />
         <label class="form-check-label" for="ach-payment-acknowledgement">I understand there is a $25 fee for declined
