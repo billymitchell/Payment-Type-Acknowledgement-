@@ -1,3 +1,6 @@
+// Extract the shop name from the <title> tag
+const shopName = document.title || "your shop";
+
 // Insert acknowledgment HTML into the DOM
 const acknowledgmentHTML = `
 <div class="payment-type-acknowledgement" style="margin-bottom: 15px;">
@@ -6,7 +9,7 @@ const acknowledgmentHTML = `
         <input class="form-check-input credit-card-payment-acknowledgement" type="checkbox"
             name="credit-card-payment-acknowledgement" id="credit-card-payment-acknowledgement" />
         <label class="form-check-label" for="credit-card-payment-acknowledgement">I understand that this payment is
-            being made to the EGroup, Inc. on behalf of {{ shop.name }} and will be reflected as such on my credit card
+            being made to the EGroup, Inc. on behalf of ${shopName} and will be reflected as such on my credit card
             statement.</label>
     </div>
     <div class="form-check custom-payment-acknowledgement-wrapper">
