@@ -27,31 +27,33 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
     `;
 
+    // Selectors for various elements in the DOM
     const selectors = {
-        targetElement: ".mt-3 input[type='submit'][value='Continue'].btn.secondary",
-        paymentContinueBtn: ".billing-method-container [value='Continue'], .payment [value='Continue']",
-        paymentOptions: {
+        targetElement: ".mt-3 input[type='submit'][value='Continue'].btn.secondary", // Target element for inserting acknowledgment HTML
+        paymentContinueBtn: ".billing-method-container [value='Continue'], .payment [value='Continue']", // Continue button selector
+        paymentOptions: { // Payment method selectors
             credit_card: '[data-method="credit_card"]',
             custom: '[data-method="custom"]',
             ach: '[data-method="ach"]',
             no_payment: '[data-method="no_payment"]',
         },
-        acknowledgmentWrappers: {
+        acknowledgmentWrappers: { // Acknowledgment wrapper selectors
             credit_card: ".credit-card-acknowledgement-wrapper",
             custom: ".custom-payment-acknowledgement-wrapper",
             ach: ".ach-payment-acknowledgement-wrapper",
         },
-        acknowledgmentInputs: {
+        acknowledgmentInputs: { // Acknowledgment input selectors
             credit_card: ".credit-card-payment-acknowledgement",
             custom: ".custom-payment-acknowledgement",
             ach: ".ach-payment-acknowledgement",
         },
     };
 
-    // Utility functions
+    // Utility functions for querying DOM elements
     const querySelector = (selector) => document.querySelector(selector);
     const querySelectorAll = (selector) => Array.from(document.querySelectorAll(selector));
 
+    // Inserts the acknowledgment HTML into the DOM
     const insertAcknowledgmentHTML = () => {
         try {
             const targetElement = querySelectorAll(".mt-3").find(div =>
@@ -68,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    // Hides all acknowledgment wrappers
     const hideAllAcknowledgments = () => {
         try {
             Object.values(selectors.acknowledgmentWrappers).forEach(selector => {
@@ -84,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    // Clears acknowledgment checkboxes and disables the continue button
     const clearAcknowledgments = (continueBtn) => {
         continueBtn.setAttribute("disabled", true);
         Object.values(selectors.acknowledgmentInputs).forEach(selector => {
@@ -92,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
+    // Displays the acknowledgment wrapper for the selected payment option
     const showAcknowledgmentForSelectedOption = (paymentOptions, acknowledgmentWrappers) => {
         try {
             hideAllAcknowledgments();
@@ -115,11 +120,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             acknowledgmentShown = true;
                             console.log(`Acknowledgment wrapper for '${key}' displayed.`);
                         } else {
-                            console.error(`Acknowledgment wrapper for '${key}' not found.`);
+                            console.warn(`Acknowledgment wrapper for '${key}' not found.`);
                         }
                     }
                 } else {
-                    console.warn(`Payment option '${selector}' not found in the DOM.`);
+                    console.warn(`Payment option '${key}' with selector '${selector}' not found in the DOM.`);
                 }
             }
 
@@ -131,6 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    // Checks if acknowledgment is completed and enables/disables the continue button
     const checkAcknowledgment = (continueBtn) => {
         try {
             const isAcknowledged = Object.values(selectors.acknowledgmentInputs).some(selector => {
@@ -149,6 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    // Attaches event listeners to payment options and acknowledgment inputs
     const attachEventListeners = (paymentOptions, acknowledgmentInputs, continueBtn) => {
         try {
             const onPaymentOptionChange = () => {
@@ -196,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Initialize
+    // Initialize the acknowledgment logic
     try {
         insertAcknowledgmentHTML();
         const continueBtn = querySelector(selectors.paymentContinueBtn);
