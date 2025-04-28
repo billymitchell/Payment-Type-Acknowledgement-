@@ -114,6 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
             for (const [key, selector] of Object.entries(paymentOptions)) {
                 const paymentOption = querySelector(selector);
                 if (paymentOption) {
+                    console.log(`Checking payment option '${key}' with selector '${selector}'. Checked: ${paymentOption.checked}`);
                     if (paymentOption.checked) {
                         const wrapper = querySelector(acknowledgmentWrappers[key]);
                         if (wrapper) {
