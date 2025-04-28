@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
             custom: ".custom-payment-acknowledgement",
             ach: ".ach-payment-acknowledgement",
         },
+        billingContainer: ".billing-method-container", // Selector for the billing container
     };
 
     // Utility functions for querying DOM elements
@@ -203,17 +204,43 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Initialize the acknowledgment logic
-    try {
-        insertAcknowledgmentHTML();
-        const continueBtn = querySelector(selectors.paymentContinueBtn);
-        showAcknowledgmentForSelectedOption(selectors.paymentOptions, selectors.acknowledgmentWrappers);
-        attachEventListeners(selectors.paymentOptions, selectors.acknowledgmentInputs, continueBtn);
-        hideAllAcknowledgments();
-        checkAcknowledgment(continueBtn);
-    } catch (error) {
-        console.error("Error during initialization:", error);
-    }
+    // Initializes the acknowledgment logic
+    const initializeAcknowledgmentLogic = () => {
+        try {
+            insertAcknowledgmentHTML();
+            const continueBtn = querySelector(selectors.paymentContinueBtn);
+            showAcknowledgmentForSelectedOption(selectors.paymentOptions, selectors.acknowledgmentWrappers);
+            attachEventListeners(selectors.paymentOptions, selectors.acknowledgmentInputs, continueBtn);
+            hideAllAcknowledgments();
+            checkAcknowledgment(continueBtn);
+        } catch (error) {
+            console.error("Error during acknowledgment logic initialization:", error);
+        }
+    };
+
+    // Observes when the billing-method-container becomes visible
+    const observeBillingContainer = () => {
+        const billingContainer = querySelector(selectors.billingContainer);
+        if (!billingContainer) {
+            console.error("Billing container not found in the DOM.");
+            return;
+        }
+
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.target.style.display !== "none") {
+                    console.log("Billing container is now visible. Initializing acknowledgment logic.");
+                    observer.disconnect(); // Stop observing once the container is visible
+                    initializeAcknowledgmentLogic();
+                }
+            });
+        });
+
+        observer.observe(billingContainer, { attributes: true, attributeFilter: ["style"] });
+    };
+
+    // Start observing the billing container
+    observeBillingContainer();
 });
 
 
