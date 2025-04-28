@@ -1,6 +1,3 @@
-// Enable testing mode
-
-    document.addEventListener("DOMContentLoaded", () => {
         const shopName = document.title || "your shop";
 
         // Constants for acknowledgment HTML and selectors
@@ -244,5 +241,5 @@
 
         // Start observing the billing container
         observeBillingContainer();
-    })
+
 
