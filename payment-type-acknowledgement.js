@@ -80,12 +80,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const showAcknowledgmentForSelectedOption = (paymentOptions, acknowledgmentWrappers) => {
         hideAllAcknowledgments();
+
+        // Check if "No Payment" is selected
         if (querySelector(selectors.paymentOptions.no_payment)?.checked) return;
 
+        // Iterate through payment options and show the corresponding acknowledgment wrapper
         for (const [key, selector] of Object.entries(paymentOptions)) {
-            if (querySelector(selector)?.checked) {
+            const paymentOption = querySelector(selector);
+            if (paymentOption?.checked) {
                 const wrapper = querySelector(acknowledgmentWrappers[key]);
-                if (wrapper) wrapper.style.display = "block";
+                if (wrapper) {
+                    wrapper.style.display = "block"; // Show the acknowledgment wrapper
+                }
             }
         }
     };
@@ -132,9 +138,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize
     insertAcknowledgmentHTML();
     const continueBtn = querySelector(selectors.paymentContinueBtn);
+    showAcknowledgmentForSelectedOption(selectors.paymentOptions, selectors.acknowledgmentWrappers);
     attachEventListeners(selectors.paymentOptions, selectors.acknowledgmentInputs, continueBtn);
     hideAllAcknowledgments();
-    showAcknowledgmentForSelectedOption(selectors.paymentOptions, selectors.acknowledgmentWrappers);
     checkAcknowledgment(continueBtn);
 });
 
