@@ -107,15 +107,19 @@ document.addEventListener("DOMContentLoaded", () => {
             let acknowledgmentShown = false;
             for (const [key, selector] of Object.entries(paymentOptions)) {
                 const paymentOption = querySelector(selector);
-                if (paymentOption?.checked) {
-                    const wrapper = querySelector(acknowledgmentWrappers[key]);
-                    if (wrapper) {
-                        wrapper.style.display = "block"; // Show the acknowledgment wrapper
-                        acknowledgmentShown = true;
-                        console.log(`Acknowledgment wrapper for '${key}' displayed.`);
-                    } else {
-                        console.error(`Acknowledgment wrapper for '${key}' not found.`);
+                if (paymentOption) {
+                    if (paymentOption.checked) {
+                        const wrapper = querySelector(acknowledgmentWrappers[key]);
+                        if (wrapper) {
+                            wrapper.style.display = "block"; // Show the acknowledgment wrapper
+                            acknowledgmentShown = true;
+                            console.log(`Acknowledgment wrapper for '${key}' displayed.`);
+                        } else {
+                            console.error(`Acknowledgment wrapper for '${key}' not found.`);
+                        }
                     }
+                } else {
+                    console.warn(`Payment option '${selector}' not found in the DOM.`);
                 }
             }
 
@@ -157,23 +161,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             };
 
-            Object.values(paymentOptions).forEach(selector => {
+            Object.entries(paymentOptions).forEach(([key, selector]) => {
                 const paymentOption = querySelector(selector);
                 if (paymentOption) {
                     paymentOption.addEventListener("click", onPaymentOptionChange);
-                    console.log(`Event listener added for payment option '${selector}'.`);
+                    console.log(`Event listener added for payment option '${key}'.`);
                 } else {
-                    console.warn(`Payment option '${selector}' not found.`);
+                    console.warn(`Payment option '${key}' with selector '${selector}' not found.`);
                 }
             });
 
-            Object.values(acknowledgmentInputs).forEach(selector => {
+            Object.entries(acknowledgmentInputs).forEach(([key, selector]) => {
                 const input = querySelector(selector);
                 if (input) {
                     input.addEventListener("click", () => checkAcknowledgment(continueBtn));
-                    console.log(`Event listener added for acknowledgment input '${selector}'.`);
+                    console.log(`Event listener added for acknowledgment input '${key}'.`);
                 } else {
-                    console.warn(`Acknowledgment input '${selector}' not found.`);
+                    console.warn(`Acknowledgment input '${key}' with selector '${selector}' not found.`);
                 }
             });
 
