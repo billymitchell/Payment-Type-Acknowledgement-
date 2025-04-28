@@ -53,21 +53,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const querySelectorAll = (selector) => Array.from(document.querySelectorAll(selector));
 
     const insertAcknowledgmentHTML = () => {
-        const targetElement = querySelectorAll(".mt-3").find(div =>
-            div.querySelector(selectors.targetElement)
-        );
-        if (targetElement) {
-            targetElement.insertAdjacentHTML("beforebegin", acknowledgmentHTML);
-        } else {
-            console.error("Target element not found. Acknowledgment HTML not inserted.");
+        try {
+            const targetElement = querySelectorAll(".mt-3").find(div =>
+                div.querySelector(selectors.targetElement)
+            );
+            if (targetElement) {
+                targetElement.insertAdjacentHTML("beforebegin", acknowledgmentHTML);
+                console.log("Acknowledgment HTML inserted successfully.");
+            } else {
+                console.error("Target element not found. Acknowledgment HTML not inserted.");
+            }
+        } catch (error) {
+            console.error("Error in insertAcknowledgmentHTML:", error);
         }
     };
 
     const hideAllAcknowledgments = () => {
-        Object.values(selectors.acknowledgmentWrappers).forEach(selector => {
-            const wrapper = querySelector(selector);
-            if (wrapper) wrapper.style.display = "none";
-        });
+        try {
+            Object.values(selectors.acknowledgmentWrappers).forEach(selector => {
+                const wrapper = querySelector(selector);
+                if (wrapper) {
+                    wrapper.style.display = "none";
+                    console.log(`Acknowledgment wrapper '${selector}' hidden.`);
+                } else {
+                    console.warn(`Acknowledgment wrapper '${selector}' not found.`);
+                }
+            });
+        } catch (error) {
+            console.error("Error in hideAllAcknowledgments:", error);
+        }
     };
 
     const clearAcknowledgments = (continueBtn) => {
@@ -79,69 +93,116 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const showAcknowledgmentForSelectedOption = (paymentOptions, acknowledgmentWrappers) => {
-        hideAllAcknowledgments();
+        try {
+            hideAllAcknowledgments();
 
-        // Check if "No Payment" is selected
-        if (querySelector(selectors.paymentOptions.no_payment)?.checked) return;
+            // Check if "No Payment" is selected
+            const noPaymentOption = querySelector(selectors.paymentOptions.no_payment);
+            if (noPaymentOption?.checked) {
+                console.log("No Payment option selected. No acknowledgment required.");
+                return;
+            }
 
-        // Iterate through payment options and show the corresponding acknowledgment wrapper
-        for (const [key, selector] of Object.entries(paymentOptions)) {
-            const paymentOption = querySelector(selector);
-            if (paymentOption?.checked) {
-                const wrapper = querySelector(acknowledgmentWrappers[key]);
-                if (wrapper) {
-                    wrapper.style.display = "block"; // Show the acknowledgment wrapper
+            // Iterate through payment options and show the corresponding acknowledgment wrapper
+            let acknowledgmentShown = false;
+            for (const [key, selector] of Object.entries(paymentOptions)) {
+                const paymentOption = querySelector(selector);
+                if (paymentOption?.checked) {
+                    const wrapper = querySelector(acknowledgmentWrappers[key]);
+                    if (wrapper) {
+                        wrapper.style.display = "block"; // Show the acknowledgment wrapper
+                        acknowledgmentShown = true;
+                        console.log(`Acknowledgment wrapper for '${key}' displayed.`);
+                    } else {
+                        console.error(`Acknowledgment wrapper for '${key}' not found.`);
+                    }
                 }
             }
+
+            if (!acknowledgmentShown) {
+                console.warn("No acknowledgment wrapper was displayed. Check payment options.");
+            }
+        } catch (error) {
+            console.error("Error in showAcknowledgmentForSelectedOption:", error);
         }
     };
 
     const checkAcknowledgment = (continueBtn) => {
-        const isAcknowledged = Object.values(selectors.acknowledgmentInputs).some(selector => {
-            const input = querySelector(selector);
-            return input?.checked;
-        });
-        if (isAcknowledged) {
-            continueBtn.removeAttribute("disabled");
-        } else {
-            continueBtn.setAttribute("disabled", true);
+        try {
+            const isAcknowledged = Object.values(selectors.acknowledgmentInputs).some(selector => {
+                const input = querySelector(selector);
+                return input?.checked;
+            });
+            if (isAcknowledged) {
+                continueBtn.removeAttribute("disabled");
+                console.log("Acknowledgment completed. Continue button enabled.");
+            } else {
+                continueBtn.setAttribute("disabled", true);
+                console.warn("Acknowledgment not completed. Continue button disabled.");
+            }
+        } catch (error) {
+            console.error("Error in checkAcknowledgment:", error);
         }
     };
 
     const attachEventListeners = (paymentOptions, acknowledgmentInputs, continueBtn) => {
-        const onPaymentOptionChange = () => {
-            clearAcknowledgments(continueBtn);
-            showAcknowledgmentForSelectedOption(paymentOptions, selectors.acknowledgmentWrappers);
-            checkAcknowledgment(continueBtn);
-        };
+        try {
+            const onPaymentOptionChange = () => {
+                try {
+                    clearAcknowledgments(continueBtn);
+                    showAcknowledgmentForSelectedOption(paymentOptions, selectors.acknowledgmentWrappers);
+                    checkAcknowledgment(continueBtn);
+                } catch (error) {
+                    console.error("Error in onPaymentOptionChange:", error);
+                }
+            };
 
-        Object.values(paymentOptions).forEach(selector => {
-            querySelector(selector)?.addEventListener("click", onPaymentOptionChange);
-        });
-
-        Object.values(acknowledgmentInputs).forEach(selector => {
-            querySelector(selector)?.addEventListener("click", () => checkAcknowledgment(continueBtn));
-        });
-
-        continueBtn?.addEventListener("click", (event) => {
-            const isAcknowledged = Object.values(acknowledgmentInputs).some(selector => {
-                const input = querySelector(selector);
-                return input?.checked;
+            Object.values(paymentOptions).forEach(selector => {
+                const paymentOption = querySelector(selector);
+                if (paymentOption) {
+                    paymentOption.addEventListener("click", onPaymentOptionChange);
+                    console.log(`Event listener added for payment option '${selector}'.`);
+                } else {
+                    console.warn(`Payment option '${selector}' not found.`);
+                }
             });
-            if (!isAcknowledged) {
-                event.preventDefault();
-                console.error("Acknowledgment not completed. Preventing form submission.");
-            }
-        });
+
+            Object.values(acknowledgmentInputs).forEach(selector => {
+                const input = querySelector(selector);
+                if (input) {
+                    input.addEventListener("click", () => checkAcknowledgment(continueBtn));
+                    console.log(`Event listener added for acknowledgment input '${selector}'.`);
+                } else {
+                    console.warn(`Acknowledgment input '${selector}' not found.`);
+                }
+            });
+
+            continueBtn?.addEventListener("click", (event) => {
+                const isAcknowledged = Object.values(acknowledgmentInputs).some(selector => {
+                    const input = querySelector(selector);
+                    return input?.checked;
+                });
+                if (!isAcknowledged) {
+                    event.preventDefault();
+                    console.error("Acknowledgment not completed. Preventing form submission.");
+                }
+            });
+        } catch (error) {
+            console.error("Error in attachEventListeners:", error);
+        }
     };
 
     // Initialize
-    insertAcknowledgmentHTML();
-    const continueBtn = querySelector(selectors.paymentContinueBtn);
-    showAcknowledgmentForSelectedOption(selectors.paymentOptions, selectors.acknowledgmentWrappers);
-    attachEventListeners(selectors.paymentOptions, selectors.acknowledgmentInputs, continueBtn);
-    hideAllAcknowledgments();
-    checkAcknowledgment(continueBtn);
+    try {
+        insertAcknowledgmentHTML();
+        const continueBtn = querySelector(selectors.paymentContinueBtn);
+        showAcknowledgmentForSelectedOption(selectors.paymentOptions, selectors.acknowledgmentWrappers);
+        attachEventListeners(selectors.paymentOptions, selectors.acknowledgmentInputs, continueBtn);
+        hideAllAcknowledgments();
+        checkAcknowledgment(continueBtn);
+    } catch (error) {
+        console.error("Error during initialization:", error);
+    }
 });
 
 
