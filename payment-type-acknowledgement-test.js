@@ -133,8 +133,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             attachListeners();
 
-            // Check the initial state of payment type selectors
-            updateAcknowledgmentVisibility();
+            // Delay the initial state check to ensure payment options are fully initialized
+            setTimeout(() => {
+                console.log("Running initial acknowledgment visibility check...");
+                updateAcknowledgmentVisibility();
+            }, 100); // Adjust the delay as needed
         } catch (error) {
             console.error("Error during acknowledgment logic initialization:", error);
         }
