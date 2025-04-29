@@ -118,27 +118,28 @@ const attachListeners = () => {
 };
 
 // Initialization
-const initializeAcknowledgmentLogic = () => {
-    try {
-        const targetElement = querySelectorAll(".mt-3").find(div =>
-            div.querySelector(selectors.targetElement)
-        );
-        if (targetElement) {
-            targetElement.insertAdjacentHTML("beforebegin", acknowledgmentHTML);
-            console.log("Acknowledgment HTML inserted successfully.");
-        } else {
-            console.error("Target element not found. Acknowledgment HTML not inserted.");
+document.addEventListener("DOMContentLoaded", () => {
+    const initializeAcknowledgmentLogic = () => {
+        try {
+            const targetElement = querySelectorAll(".mt-3").find(div =>
+                div.querySelector(selectors.targetElement)
+            );
+            if (targetElement) {
+                targetElement.insertAdjacentHTML("beforebegin", acknowledgmentHTML);
+                console.log("Acknowledgment HTML inserted successfully.");
+            } else {
+                console.error("Target element not found. Acknowledgment HTML not inserted.");
+            }
+
+            attachListeners();
+
+            // Check the initial state of payment type selectors
+            updateAcknowledgmentVisibility();
+        } catch (error) {
+            console.error("Error during acknowledgment logic initialization:", error);
         }
+    };
 
-        attachListeners();
-
-        // Check the initial state of payment type selectors
-        updateAcknowledgmentVisibility();
-    } catch (error) {
-        console.error("Error during acknowledgment logic initialization:", error);
-    }
-};
-
-
-initializeAcknowledgmentLogic();
+    initializeAcknowledgmentLogic();
+});
 
