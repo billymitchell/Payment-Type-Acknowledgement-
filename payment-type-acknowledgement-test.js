@@ -1,4 +1,4 @@
-        const shopName = document.title || "your shop";
+const shopName = document.title || "your shop";
 
         // Constants for acknowledgment HTML and selectors
         const acknowledgmentHTML = `
@@ -218,28 +218,7 @@
             }
         };
 
-        // Observes when the billing-method-container becomes visible
-        const observeBillingContainer = () => {
-            const billingContainer = querySelector(selectors.billingContainer);
-            if (!billingContainer) {
-                console.error("Billing container not found in the DOM.");
-                return;
-            }
-
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    if (mutation.target.style.display !== "none") {
-                        console.log("Billing container is now visible. Initializing acknowledgment logic.");
-                        observer.disconnect(); // Stop observing once the container is visible
-                        initializeAcknowledgmentLogic();
-                    }
-                });
-            });
-
-            observer.observe(billingContainer, { attributes: true, attributeFilter: ["style"] });
-        };
-
-        // Start observing the billing container
-        observeBillingContainer();
+        // Directly initialize acknowledgment logic when the script loads
+        initializeAcknowledgmentLogic();
 
 
